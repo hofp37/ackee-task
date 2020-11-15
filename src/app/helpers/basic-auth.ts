@@ -1,4 +1,6 @@
 import userService from '../services/userService'
+import { NotAuthenticated } from '../errors/classes'
+import { E_CODES } from '../errors/index'
 
 async function basicAuth(req: any, res: any, next: any) {
   // make authenticate path public
@@ -11,7 +13,7 @@ async function basicAuth(req: any, res: any, next: any) {
     !req.headers.authorization ||
     req.headers.authorization.indexOf('Basic ') === -1
   ) {
-    return res.status(401).json({ message: 'Missing Authorization Header' })
+    return next(new NotAuthenticated(E_CODES.MISSING_AUTHORIZATION_HEADER))
   }
 
   // verify auth credentials
@@ -19,11 +21,7 @@ async function basicAuth(req: any, res: any, next: any) {
   const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii')
   const [username, password] = credentials.split(':')
   const user = await userService.authenticate({ username, password })
-  if (!user) {
-    return res
-      .status(401)
-      .json({ message: 'Invalid Authentication Credentials' })
-  }
+  if (!user) return next(new NotAuthenticated(E_CODES.INVALID_CREDENTIALS))
 
   // attach user to request object
   req.user = user

@@ -7,16 +7,23 @@ const users = [
     firstName: 'Test',
     lastName: 'User',
   },
+  {
+    id: 2,
+    username: 'patrik',
+    password: 'patrik',
+    firstName: 'Test',
+    lastName: 'User',
+  },
 ]
 
-function authenticate({
+async function authenticate({
   username,
   password,
 }: {
   username: any
   password: any
 }) {
-  const user = users.find(
+  const user = await users.find(
     u => u.username === username && u.password === password
   )
   if (user) {
