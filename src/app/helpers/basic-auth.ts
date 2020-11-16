@@ -1,8 +1,9 @@
+import { Request, Response, NextFunction } from 'express'
 import userService from '../services/userService'
 import { NotAuthenticated } from '../errors/classes'
 import { E_CODES } from '../errors/index'
 
-async function basicAuth(req: any, res: any, next: any) {
+async function basicAuth(req: Request, res: Response, next: NextFunction) {
   try {
     // make authenticate path public
     if (req.path === '/api/users/authenticate') {
@@ -12,7 +13,7 @@ async function basicAuth(req: any, res: any, next: any) {
     // check for basic auth header
     if (
       !req.headers.authorization ||
-      req.headers.authorization.indexOf('Basic ') === -1
+      !req.headers.authorization.includes('Basic ')
     ) {
       throw new NotAuthenticated(E_CODES.MISSING_AUTHORIZATION_HEADER)
     }

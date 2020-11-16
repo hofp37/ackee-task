@@ -20,8 +20,8 @@ async function authenticate({
   username,
   password,
 }: {
-  username: any
-  password: any
+  username: string
+  password: string
 }) {
   const user = await users.find(
     u => u.username === username && u.password === password

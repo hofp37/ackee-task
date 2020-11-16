@@ -1,8 +1,13 @@
+import { Request, Response, NextFunction } from 'express'
 import problemService from '../services/problemService'
 import { NotAuthorized } from '../errors/classes'
 import { E_CODES } from '../errors/index'
 
-export async function createProblem(req: any, res: any, next: any) {
+export async function createProblem(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { value, type } = req.body
     const createdBy = req.user.id
@@ -23,7 +28,11 @@ export async function createProblem(req: any, res: any, next: any) {
   }
 }
 
-export async function getProblem(req: any, res: any, next: any) {
+export async function getProblem(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const problem = await problemService.getProblemById(req.params.problemId)
 
@@ -33,7 +42,11 @@ export async function getProblem(req: any, res: any, next: any) {
   }
 }
 
-export async function getProblemList(req: any, res: any, next: any) {
+export async function getProblemList(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { type } = req.query
     const filter = type ? { type } : {}
@@ -46,7 +59,11 @@ export async function getProblemList(req: any, res: any, next: any) {
   }
 }
 
-export async function updateProblem(req: any, res: any, next: any) {
+export async function updateProblem(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { value, type } = req.body
 
@@ -69,12 +86,16 @@ export async function updateProblem(req: any, res: any, next: any) {
   }
 }
 
-export async function deleteProblem(req: any, res: any, next: any) {
+export async function deleteProblem(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const problem = await problemService.getProblemById(req.params.problemId)
 
     if (req.user.id !== problem.toObject().createdBy) {
-      throw next(new NotAuthorized(E_CODES.INSUFFICIENT_RIGHTS))
+      throw new NotAuthorized(E_CODES.INSUFFICIENT_RIGHTS)
     }
 
     await problemService.deleteProblem(problem)

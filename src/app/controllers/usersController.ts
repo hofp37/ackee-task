@@ -1,8 +1,13 @@
+import { Request, Response, NextFunction } from 'express'
 import userService from '../services/userService'
 import { BadRequest, NotAuthenticated } from '../errors/classes'
 import { E_CODES } from '../errors/index'
 
-export async function authenticate(req: any, res: any, next: any) {
+export async function authenticate(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { username, password } = req.body
 
@@ -19,7 +24,7 @@ export async function authenticate(req: any, res: any, next: any) {
   }
 }
 
-export function getAllUsers(req: any, res: any, next: any) {
+export function getAllUsers(req: Request, res: Response, next: NextFunction) {
   const users = userService.getAll()
 
   res.status(200).json(users)
