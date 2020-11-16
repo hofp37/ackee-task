@@ -46,6 +46,7 @@
     "node-healthz": "^1.0.1",
     "npm-run-series": "^1.0.1",
     "source-map-support": "^0.5.19",
+    "swagger-ui-express": "^4.1.4",
     "unicore": "^0.4.0"
   },
   "devDependencies": {
@@ -55,6 +56,7 @@
     "@types/mongoose": "^5.10.0",
     "@types/node": "^12.12.42",
     "@types/supertest-as-promised": "^2.0.38",
+    "@types/swagger-ui-express": "^4.1.2",
     "concurrently": "^5.2.0",
     "cross-env": "^7.0.2",
     "eclint": "^2.8.1",

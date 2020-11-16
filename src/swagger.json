@@ -1,0 +1,484 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Ackee Problematic API",
+        "description": "API documentation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api",
+            "description": "Local Server"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "basicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            }
+        },
+        "schemas": {
+            "userCredentials": {
+                "title": "User credentials - Payload",
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "example": {
+                    "username": "test",
+                    "password": "test"
+                }
+            },
+            "userObject": {
+                "title": "User - Response",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "id": 1,
+                    "username": "test",
+                    "firstName": "test",
+                    "lastName": "test"
+                }
+            },
+            "arrayOfUsers": {
+                "title": "List of Users - Response",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/userObject"
+                },
+                "example": [
+                    {
+                        "id": 1,
+                        "username": "test",
+                        "firstName": "test",
+                        "lastName": "test"
+                    },
+                    {
+                        "id": 2,
+                        "username": "user",
+                        "firstName": "user",
+                        "lastName": "user"
+                    }
+                ]
+            },
+            "problemObject": {
+                "title": "Problem - Payload",
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "value",
+                    "type"
+                ],
+                "example": {
+                    "value": "If two is a company and three is a crowd. What is four and five?",
+                    "type": "riddle"
+                }
+            },
+            "problemObjectResponse": {
+                "title": "Problem - Response",
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "number"
+                    },
+                    "__v": {
+                        "type": "number"
+                    }
+                },
+                "example": {
+                    "_id": "5fb2904a8bc37d30c0e21acc",
+                    "value": "If two is a company and three is a crowd. What is four and five?",
+                    "type": "riddle",
+                    "createdBy": 1,
+                    "__v": 0
+                }
+            },
+            "arrayOfProblems": {
+                "title": "List of Problems - Response",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/problemObjectResponse"
+                },
+                "example": [
+                    {
+                        "_id": "5fb2904a8bc37d30c0e21acc",
+                        "value": "If two is a company and three is a crowd. What is four and five?",
+                        "type": "riddle",
+                        "createdBy": 1,
+                        "__v": 0
+                    },
+                    {
+                        "_id": "5fb01711830cf445f0c0fd69",
+                        "value": "1- (10/5)* 2 +7",
+                        "type": "expression",
+                        "createdBy": 1,
+                        "__v": 0
+                    }
+                ]
+            }
+        },
+        "responses": {
+            "statusOk": {
+                "description": "Successful operation."
+            },
+            "notAuthenticated": {
+                "description": "Authorization information is missing or invalid."
+            },
+            "fieldsMissing": {
+                "description": "Mandatory fields missing in the payload."
+            },
+            "validationError": {
+                "description": "Mandatory fields missing in the payload. ; Incorrect type provided. ; Duplication error - problem already exists."
+            },
+            "validationErrorUpdate": {
+                "description": "Problem ID not valid. ; Mandatory fields missing in the payload. ; Incorrect type provided. ; Duplication error - problem already exists."
+            },
+            "notFound": {
+                "description": "Problem not found."
+            },
+            "insufficientRights": {
+                "description": "Insufficient rights to perform this action."
+            }
+        }
+    },
+    "paths": {
+        "/users/authenticate": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Authenticates and returns a User object. Could be used in the future for different auth type and return response with token.",
+                "requestBody": {
+                    "description": "User credentials payload to auth a user.",
+                    "required": "true",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userCredentials"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/statusOk",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userObject"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/fieldsMissing"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/notAuthenticated"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all users. Returns an array of User objects.",
+                "security": [
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/statusOk",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/arrayOfUsers"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/notAuthenticated"
+                    }
+                }
+            }
+        },
+        "/problems": {
+            "post": {
+                "tags": [
+                    "Problems"
+                ],
+                "summary": "Creates a new record into database and returns the object.",
+                "security": [
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payload to create a new problem.",
+                    "required": "true",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/problemObject"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/statusOk",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/problemObjectResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/validationError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/notAuthenticated"
+                    },
+                    "500": {
+                        "description": "Database error when trying to perform save operation."
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Problems"
+                ],
+                "summary": "Get all problems. Returns an array of Problem objects. Problems could be filtered by type using query params.",
+                "security": [
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter results by riddle or expression type",
+                        "allowEmptyValue": "true",
+                        "style": "form",
+                        "explode": "true"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/statusOk",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/arrayOfProblems"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/notAuthenticated"
+                    },
+                    "500": {
+                        "description": "Database error when trying to perform get list operation."
+                    }
+                }
+            }
+        },
+        "/problems/{id}": {
+            "get": {
+                "tags": [
+                    "Problems"
+                ],
+                "summary": "Get one problem by ID. Returns a Problem object.",
+                "security": [
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": "true",
+                        "description": "The problem ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/statusOk",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/problemObjectResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Provided Problem ID is not valid."
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/notAuthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/notFound"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Problems"
+                ],
+                "summary": "Update a problem by ID. Returns a new Problem object.",
+                "security": [
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": "true",
+                        "description": "The problem ID"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payload to update a new problem.",
+                    "required": "true",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/problemObject"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/statusOk",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/problemObjectResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/validationErrorUpdate"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/notAuthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/insufficientRights"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/notFound"
+                    },
+                    "500": {
+                        "description": "Database error when trying to perform update operation."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Problems"
+                ],
+                "summary": "Delete a problem by ID.",
+                "security": [
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": "true",
+                        "description": "The problem ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/statusOk"
+                    },
+                    "400": {
+                        "description": "Problem ID not valid."
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/notAuthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/insufficientRights"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/notFound"
+                    },
+                    "500": {
+                        "description": "Database error when trying to perform delete operation."
+                    }
+                }
+            }
+        }
+    }
+}
