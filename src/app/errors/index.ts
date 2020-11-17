@@ -56,4 +56,8 @@ export const E_CODES = checkErrors({
     message:
       'Problem ID passed in must be a single String of 12 bytes or a string of 24 hex characters',
   },
+  VALUE_NOT_VALID_EXPRESSION: {
+    code: 'VALUE_NOT_VALID_EXPRESSION',
+    message: 'Provided value is not valid for expression type',
+  },
 } as const)

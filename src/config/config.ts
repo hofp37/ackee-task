@@ -22,6 +22,7 @@ const configSchema = {
   },
   types: {
     valid: [loader.string('RIDDLE_TYPE'), loader.string('EXPRESSION_TYPE')],
+    expression: loader.string('EXPRESSION_TYPE'),
   },
 }
 

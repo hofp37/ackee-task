@@ -70,6 +70,13 @@ async function validateRequestBody(requestBody: RequestBodyType) {
     throw new BadRequest(E_CODES.INCORRECT_TYPE_PROVIDED)
   }
 
+  if (
+    type === config.types.expression &&
+    value.match(/(^[\d ( +-]).*([\d )$])/) === null
+  ) {
+    throw new BadRequest(E_CODES.VALUE_NOT_VALID_EXPRESSION)
+  }
+
   const problemFound = await checkDuplication(value)
   if (problemFound) throw new BadRequest(E_CODES.DUPLICATION_ERROR_PROBLEM)
 }
