@@ -1,6 +1,6 @@
 <div align="center">
 
-# Node template
+# Ackee Task
 
 [![Build Status](https://img.shields.io/travis/com/AckeeCZ/node-template/master.svg?style=flat-square)](https://travis-ci.com/AckeeCZ/node-template)
 [![Coverage](https://img.shields.io/codeclimate/coverage/AckeeCZ/node-template.svg?style=flat-square)](https://codeclimate.com/github/AckeeCZ/node-template)
@@ -9,7 +9,7 @@
 [![Dependency Status](https://img.shields.io/david/AckeeCZ/node-template.svg?style=flat-square)](https://david-dm.org/AckeeCZ/node-template)
 [![Dev Dependency Status](https://img.shields.io/david/dev/AckeeCZ/node-template.svg?style=flat-square)](https://david-dm.org/AckeeCZ/node-template?type=dev)
 
-Ackee node back-end project template
+Made with Ackee node back-end project template
 
 </div>
 
@@ -17,7 +17,7 @@ Ackee node back-end project template
 
 - `npm install`
 - `npm start`
-- Visit [`http://localhost:3000/`](http://localhost:3000/), [`/healthz`](http://localhost:3000/healthz) or [`/api/hello`](http://localhost:3000/api/hello)
+- Visit API docs [`http://localhost:3000/api/docs`](http://localhost:3000/api/docs)
 
 Want to know more? See [getting started](./docs/getting-started.md).
 
